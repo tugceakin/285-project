@@ -1,0 +1,33 @@
+#chart-div{
+	background: #fafafa;
+	width: 600px;
+	height: 400px;
+	margin: 100px auto;
+	padding: 10px;
+	border-radius: 10px;
+}
+
+.hide{
+	display: none;
+}
+
+.row{
+	margin-top:100px;
+}
+
+.form-group{
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    width: 300px;
+}
+
+.form-group button{
+	width: 300px;
+}
+
+
+/*Change default bootstrap select width*/
+.bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+    width: 100%;
+}
