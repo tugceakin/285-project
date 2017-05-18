@@ -7,6 +7,7 @@
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/loader.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
 <!-- Custom  -->
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/main.css') }}">
@@ -19,9 +20,22 @@
     <div class="col-md-12">
       {% include 'form.html' %}
       <div class="loader collapse">Loading...</div>
-      <div id="chart-div" class="collapse">
-        <canvas id="stock-chart"></canvas>
-    </div>
+      <div id="bar-chart-div" class="col-md-6 collapse">
+        <h2>Current Prices</h2>
+        <canvas id="bar-chart"></canvas>
+      </div>
+      <div id="weekly-chart-div" class="col-md-6 collapse">
+        <h2>Weekly Portfolio</h2>
+          <fieldset>
+          </fieldset>
+        <canvas id="weekly-stock-chart"></canvas>
+      </div>
+
+      <div id="pie-chart-div" class="col-md-6 collapse">
+        <!-- <h2>How The Money Is Divided</h2> -->
+        <h2>#Shares</h2>
+        <canvas id="pie-chart"></canvas>
+      </div>
   </div>
 </div>
 
@@ -30,11 +44,15 @@
   <script 
   src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
   crossorigin="anonymous"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
  <script type=text/javascript src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  <script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js"></script>
  <script type=text/javascript src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 
   <!-- Custom scripts -->
+  <script type=text/javascript src="{{url_for('static', filename='scripts/form.js') }}"></script>
+ <script type=text/javascript src="{{url_for('static', filename='scripts/server_calls.js') }}"></script>
+ <script type=text/javascript src="{{url_for('static', filename='scripts/chart.js') }}"></script>
  <script type=text/javascript src="{{url_for('static', filename='scripts/main.js') }}"></script>
 
 </body>
