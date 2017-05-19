@@ -1,5 +1,4 @@
 import datetime
-import json
 from sqlalchemy_utils.types import choice
 
 from app import db
@@ -26,7 +25,7 @@ def to_json(inst, cls):
             d[c.name] = str()
         else:
             d[c.name] = v
-    return json.dumps(d)
+    return d
 
 class Symbol(db.Model):
 
@@ -89,7 +88,9 @@ class SymbolValue(db.Model):
     symbol = db.relationship('Symbol', backref=db.backref('values', lazy='dynamic'))
 
     def to_json(self):
-        return to_json(self, self.__class__)
+        ret = to_json(self, self.__class__)
+        ret["symbol"] = self.symbol.symbol
+        return ret
 
 def last_n_dates(n):
     base = datetime.datetime.today().date()
