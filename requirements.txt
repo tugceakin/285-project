@@ -1,0 +1,7 @@
+flask
+yahoo-finance
+flask-sqlalchemy
+sqlalchemy-utils
+requests
+bs4
+python-dateutil
