@@ -4,7 +4,7 @@ var generateWeeklyChartLabels = function(data){
 	var labels = [];
 
 	for(var i=data.length-1; i>=0; i--){
-		labels.push(data[i].Date);
+		labels.push(data[i].date);
 	}
 
 	return labels;
@@ -23,7 +23,7 @@ var generateClosingPrices = function(data){
 	var prices = [];
 
 	for(var i=data.length-1; i>=0; i--){
-		prices.push(data[i].Close);
+		prices.push(data[i].close);
 	}
 
 	return prices;
@@ -34,7 +34,7 @@ var generateDailyOverall = function(history_data, divide_data){
 
 	for(var i=0; i<history_data.length; i++){ //for each stock
 		for(var j=0; j<history_data[i].length; j++){ // each day
-			weekly_data[j] += divide_data[history_data[i][j].Symbol] * history_data[i][j].Close;
+			weekly_data[j] += divide_data[history_data[i][j].symbol] * history_data[i][j].close;
 		}
 	}
 
@@ -46,13 +46,14 @@ var generateWeeklyChartDataset = function(data){
 	var arr = [];
 	var history_data = data['history_data'];
 	var divide_data = data['divide_data'];
+	// debugger
 
 		//var closing_prices = generateClosingPrices(data[i]);
 	var weekly_data = generateDailyOverall(history_data, divide_data);
 
 	arr.push(	
 	   {
-            //label: data[i][0].Symbol + ' Closing Price',
+            //label: data[i][0].symbol + ' Closing Price',
             label: "Overall Value",
             data: [{
                 x: -10,
@@ -91,7 +92,7 @@ var generatePieChartDataset= function(data){
 var generateBarChartDataset= function(data){
 	var dataset = [];
 	for (var i=0; i<data.length; i++) {
-	 dataset.push(data[i][0].Close);
+	 dataset.push(data[i][0].close);
 	}
 	return dataset;
 }
