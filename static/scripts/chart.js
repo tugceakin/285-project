@@ -47,35 +47,33 @@ var generateWeeklyChartDataset = function(data){
 	var history_data = data['history_data'];
 	var divide_data = data['divide_data'];
 
-	for(var i=0; i<history_data.length; i++){
 		//var closing_prices = generateClosingPrices(data[i]);
-		var weekly_data = generateDailyOverall(history_data, divide_data);
+	var weekly_data = generateDailyOverall(history_data, divide_data);
 
-		arr.push(	
-		   {
-	            //label: data[i][0].Symbol + ' Closing Price',
-	            label: "Overall Value",
-	            data: [{
-	                x: -10,
-	                y: weekly_data[0]
-	            }, {
-	                x: 0,
-	                y: weekly_data[1]
-	            }, {
-	                x: 10,
-	                y: weekly_data[2]
-	            }, {
-	                x: 10,
-	                y: weekly_data[3]
-	            }, {
-	                x: 0,
-	                y: weekly_data[4]
-	            }],
-	            backgroundColor: 'rgba(75, 192, 192,0.5)',
-	            borderWidth: 1
-	        } 
-	    );
-	}
+	arr.push(	
+	   {
+            //label: data[i][0].Symbol + ' Closing Price',
+            label: "Overall Value",
+            data: [{
+                x: -10,
+                y: weekly_data[0]
+            }, {
+                x: 0,
+                y: weekly_data[1]
+            }, {
+                x: 10,
+                y: weekly_data[2]
+            }, {
+                x: 10,
+                y: weekly_data[3]
+            }, {
+                x: 0,
+                y: weekly_data[4]
+            }],
+            backgroundColor: 'rgba(75, 192, 192,0.5)',
+            borderWidth: 1
+        } 
+    );
 
 	return arr;
 }
@@ -169,9 +167,9 @@ var initBarChart = function(data){
 
 	var data = {
 	    labels: generatePieChartLabels(data["divide_data"]),
+
 	    datasets: [
 	        {
-	            label: generatePieChartLabels(data["divide_data"]),
 	            backgroundColor: [
 	                'rgba(255, 99, 132, 0.2)',
 	                'rgba(54, 162, 235, 0.2)',
@@ -196,6 +194,11 @@ var initBarChart = function(data){
 
 	var myBarChart = new Chart(ctx, {
 	    type: 'horizontalBar',
-	    data: data
+	    data: data,
+	    options: { 
+	        legend: { 
+	            display: false 
+	        }
+        }
 	});
 }
