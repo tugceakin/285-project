@@ -9,7 +9,7 @@ def to_json(inst, cls):
     Jsonify the sql alchemy query result.
     """
     convert = dict()
-    # add your coversions for things like datetime's 
+    # add your coversions for things like datetimes
     # and what-not that aren't serializable.
     d = dict()
     for c in cls.__table__.columns:
@@ -27,6 +27,7 @@ def to_json(inst, cls):
             d[c.name] = v
     return d
 
+
 class Symbol(db.Model):
 
     __tablename__ = 'symbol'
@@ -36,8 +37,9 @@ class Symbol(db.Model):
     )
 
     id = db.Column(db.Integer, primary_key=True)
-    symbol = db.Column(db.String)
+    symbol = db.Column(db.String, unique=True)
     symbol_type = db.Column(choice.ChoiceType(TYPES))
+    index = db.Column(db.Boolean, default=False)
 
     def get_historical_data(self):
         DAYS = 5
@@ -48,19 +50,27 @@ class Symbol(db.Model):
         ))
         if values_in_db.count() != DAYS:
             # Delete first because no upsert
-            values_in_db.delete()
-            # db.session.commit()
+            self.values.delete()
             for data in scrape_historical_data(self.symbol):
                 self.values.append(SymbolValue(**data))
-            # db.session.commit()
         values_in_db = self.values.filter(db.and_(
             SymbolValue.date >= dates[-1],
             SymbolValue.date <= dates[0],
         ))
         return values_in_db
 
+    def get_historical_data_monthly(self):
+        last_val = self.values_monthly.order_by(db.desc(SymbolValueMonthly.date)).first()
+        if (not last_val) or last_val.date.month != datetime.datetime.today().month:
+            # scrape
+            # Delete first because no upsert
+            self.values_monthly.delete()
+            for data in scrape_historical_data(self.symbol, monthly=True):
+                self.values_monthly.append(SymbolValueMonthly(**data))
+        return self.values_monthly.order_by(SymbolValueMonthly.date)
 
-    def repr(self):
+
+    def __repr__(self):
         return '<Symbol {}:{}>'.format(self.id, self.symbol)
 
     def to_json(self):
@@ -91,6 +101,30 @@ class SymbolValue(db.Model):
         ret = to_json(self, self.__class__)
         ret["symbol"] = self.symbol.symbol
         return ret
+
+
+class SymbolValueMonthly(db.Model):
+
+    __tablename__ = 'symbol_value_monthly'
+    __table_args__ = (db.UniqueConstraint('date', 'symbol_id'),)
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    value = db.Column(db.Float)
+    open = db.Column(db.Float)
+    high = db.Column(db.Float)
+    low = db.Column(db.Float)
+    close = db.Column(db.Float)
+    adj_close = db.Column(db.Float)
+    volume = db.Column(db.String)
+    symbol_id = db.Column(db.Integer, db.ForeignKey('symbol.id'))
+    symbol = db.relationship('Symbol', backref=db.backref('values_monthly', lazy='dynamic'))
+
+    def to_json(self):
+        ret = to_json(self, self.__class__)
+        ret["symbol"] = self.symbol.symbol
+        return ret
+
 
 def last_n_dates(n):
     base = datetime.datetime.today().date()

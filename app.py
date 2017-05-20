@@ -18,7 +18,7 @@ def get_value_investing_symbols():
       stocks = []
 
       #Loop each stock and generate an array with (stock_name, price-earnings ratio) tuples
-      for s in db.session.query(Symbol).filter(Symbol.symbol_type == 'STOCK'):
+      for s in Symbol.query.filter(Symbol.symbol_type == 'STOCK'):
             stock = Share(s.symbol)
             pe_ratio = stock.get_price_earnings_ratio()
             if pe_ratio is not None:
@@ -35,8 +35,19 @@ def get_value_investing_symbols():
 
 #Return the top 3 etfs (highest price)
 def get_index_investing_data():
-      etfs = [];
-      return ""
+      from db import Symbol
+      from data import get_trend
+      recommendation = []
+      for s in Symbol.query.filter(db.and_(
+                  Symbol.symbol_type == 'ETF',
+                  Symbol.index == True
+      )):
+            data = [x.close for x in s.get_historical_data_monthly()]
+            trend = get_trend(data)
+            if trend > 0:
+                  recommendation.append((s, trend))
+      recommendation.sort(key=operator.itemgetter(1))
+      return [recommendation[0][0], recommendation[1][0], recommendation[2][0]]
 
 
 
