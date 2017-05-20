@@ -142,11 +142,9 @@ def stock_data():
       if "Ethical Investing" in strategies:  
             suggested_stock_symbols = suggested_stock_symbols + get_ethical_investing_symbols()
 
-      if "Quality Investing" in strategies:
-            suggested_stock_symbols = suggested_stock_symbols + get_quality_investing_symbols()
+      if "Growth Investing" in strategies:
+            suggested_stock_symbols = suggested_stock_symbols + get_growth_investing_symbols()
 
-      if "Ethical Investing" in strategies:
-            suggested_stock_symbols = suggested_stock_symbols + get_ethical_investing_symbols()
 
       for s in suggested_stock_symbols:
             result["history_data"].append([x.to_json() for x in s.get_historical_data()])
