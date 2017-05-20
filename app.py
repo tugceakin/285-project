@@ -106,11 +106,18 @@ def stock_data():
       print request.json["investment"]
 
       investment = float(request.json["investment"])
+      strategies = request.json["strategies"];
       result = {}
       result["history_data"] = []
+      suggested_stock_symbols = []
 
-      #TODO: For now, this call is only returning value investing data.
-      suggested_stock_symbols = get_quality_investing_symbols()
+      if "Index Investing" in strategies:
+            #Concatenate two lists
+            suggested_stock_symbols = suggested_stock_symbols + get_index_investing_data() 
+
+      if "Value Investing" in strategies:  
+            suggested_stock_symbols = suggested_stock_symbols + get_value_investing_symbols()
+
       for s in suggested_stock_symbols:
             result["history_data"].append([x.to_json() for x in s.get_historical_data()])
 

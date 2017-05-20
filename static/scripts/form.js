@@ -1,6 +1,7 @@
 var submitForm = function(){
 	var request = getStockData();
 	$('.loader').show();
+	$('#stock-form').hide();	
 	$('#weekly-chart-div').hide();	  	
   	$('#bar-chart-div').hide();	
   	$('#pie-chart-div').hide();	   
@@ -10,6 +11,7 @@ var submitForm = function(){
 	.done(function(data) {
 	  	console.log(data);
 	  	$('.loader').hide();
+	  	$('#stock-form').show();	
 	  	$('#weekly-chart-div').show();	  	
 	  	$('#bar-chart-div').show();	
 	  	$('#pie-chart-div').show();	    	
