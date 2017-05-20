@@ -32,7 +32,6 @@ def get_value_investing_symbols():
       return [stocks[0][0], stocks[1][0], stocks[2][0]]
 
 
-
 #Return the top 3 etfs (highest price)
 def get_index_investing_data():
       from db import Symbol
@@ -49,6 +48,43 @@ def get_index_investing_data():
       recommendation.sort(key=operator.itemgetter(1))
       return [recommendation[0][0], recommendation[1][0], recommendation[2][0]]
 
+
+#Return specific 3 quality stock options
+def get_quality_investing_symbols():
+      from db import Symbol
+      quality_stocks = []
+
+      # Only get specific quality stocks
+      for s in db.session.query(Symbol).filter(Symbol.quality == True):
+            stock = Share(s.symbol)
+            pe_ratio = stock.get_price_earnings_ratio()
+            if pe_ratio is not None:
+                  quality_stocks.append((s, float(pe_ratio)))
+
+      #Sort by highest price earnings ratio
+      quality_stocks.sort(key=operator.itemgetter(1), reverse=True)
+
+      #Return top 3
+      return [quality_stocks[0][0], quality_stocks[1][0], quality_stocks[2][0]]
+
+
+#Return specific 3 ethical stock options
+def get_ethical_investing_symbols():
+      from db import Symbol
+      ethical_stocks = []
+
+      # Only get specific ethical stocks
+      for s in db.session.query(Symbol).filter(Symbol.ethical == True):
+            stock = Share(s.symbol)
+            pe_ratio = stock.get_price_earnings_ratio()
+            if pe_ratio is not None:
+                  ethical_stocks.append((s, float(pe_ratio)))
+
+      # Sort by highest price earnings ratio
+      sorted(ethical_stocks, key=operator.itemgetter(1), reverse=True)
+
+      # Return top 3
+      return [ethical_stocks[0][0], ethical_stocks[1][0], ethical_stocks[2][0]]
 
 
 #TODO: How to divide better? I'm just dividing them equally
@@ -81,6 +117,18 @@ def stock_data():
 
       if "Value Investing" in strategies:  
             suggested_stock_symbols = suggested_stock_symbols + get_value_investing_symbols()
+            
+      if "Quality Investing" in strategies:  
+            suggested_stock_symbols = suggested_stock_symbols + get_quality_investing_symbols()
+            
+      if "Ethical Investing" in strategies:  
+            suggested_stock_symbols = suggested_stock_symbols + get_ethical_investing_symbols()
+
+      if "Quality Investing" in strategies:
+            suggested_stock_symbols = suggested_stock_symbols + get_quality_investing_symbols()
+
+      if "Ethical Investing" in strategies:
+            suggested_stock_symbols = suggested_stock_symbols + get_ethical_investing_symbols()
 
       for s in suggested_stock_symbols:
             result["history_data"].append([x.to_json() for x in s.get_historical_data()])
