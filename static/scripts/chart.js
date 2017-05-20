@@ -2,8 +2,8 @@ var portfolioChart;
 
 var generateWeeklyChartLabels = function(data){
 	var labels = [];
-
-	for(var i=data.length-1; i>=0; i--){
+	console.log(data);
+	for(var i=0; i< data.length; i++){
 		labels.push(data[i].date);
 	}
 
@@ -137,12 +137,18 @@ var initPieChart = function(data){
 	            backgroundColor: [
 	                "#FF6384",
 	                "#36A2EB",
-	                "#FFCE56"
+	                "#FFCE56",
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
 	            ],
 	            hoverBackgroundColor: [
 	                "#FF6384",
 	                "#36A2EB",
-	                "#FFCE56"
+	                "#FFCE56",
+	                'rgba(75, 192, 192, 1)',
+	                'rgba(153, 102, 255, 1)',
+	                'rgba(255, 159, 64, 1)'
 	            ]
 	        }]
 	};
