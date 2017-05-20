@@ -4,7 +4,9 @@ var submitForm = function(){
 	$('#stock-form').hide();	
 	$('#weekly-chart-div').hide();	  	
   	$('#bar-chart-div').hide();	
-  	$('#pie-chart-div').hide();	   
+  	$('#pie-chart-div').hide();	 
+
+  	destroyCharts();  
 
 	request
 	//If the request is successful, initialize the chart

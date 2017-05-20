@@ -1,9 +1,15 @@
-var portfolioChart;
+var portfolioChart, pieChart, myBarChart;
+
+var destroyCharts = function(){
+	if(portfolioChart) portfolioChart.destroy();
+	if(pieChart) pieChart.destroy();
+	if(myBarChart) myBarChart.destroy();
+}
 
 var generateWeeklyChartLabels = function(data){
 	var labels = [];
 	console.log(data);
-	for(var i=0; i< data.length; i++){
+	for(var i=0; i<data.length; i++){
 		labels.push(data[i].date);
 	}
 
@@ -153,7 +159,7 @@ var initPieChart = function(data){
 	        }]
 	};
 
-	var pieChart = new Chart(ctx, {
+	pieChart = new Chart(ctx, {
 		height: 300,
 	    type: 'pie',
 	    data: pieData,
@@ -199,7 +205,7 @@ var initBarChart = function(data){
 	    ]
 	};
 
-	var myBarChart = new Chart(ctx, {
+	myBarChart = new Chart(ctx, {
 	    type: 'horizontalBar',
 	    data: data,
 	    options: { 
