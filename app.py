@@ -11,6 +11,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app, session_options={'autocommit': True})
+QUALITY_STOCKS = ('GE','BA','HD','SBUX','PG','PEP','VZ')
+ETHICAL_STOCKS = ('DIS','PX','GOOG','UNFI','HLF','GILD')
 
 #Return the stock names with the lowest ratio of price–earnings ratio
 def get_value_investing_symbols():
@@ -32,7 +34,6 @@ def get_value_investing_symbols():
       return [stocks[0][0], stocks[1][0], stocks[2][0]]
 
 
-
 #Return the top 3 etfs (highest price)
 def get_index_investing_data():
       from db import Symbol
@@ -49,6 +50,54 @@ def get_index_investing_data():
       recommendation.sort(key=operator.itemgetter(1))
       return [recommendation[0][0], recommendation[1][0], recommendation[2][0]]
 
+
+#Return specific 3 quality stock options
+def get_quality_investing_symbols():
+      from db import Symbol
+      quality_stocks = []
+
+      # Only get specific quality stocks
+      for s in db.session.query(Symbol).filter(Symbol.symbol == QUALITY_STOCKS[0]
+                                               or Symbol.symbol == QUALITY_STOCKS[1]
+                                               or Symbol.symbol == QUALITY_STOCKS[2]
+                                               or Symbol.symbol == QUALITY_STOCKS[3]
+                                               or Symbol.symbol == QUALITY_STOCKS[4]
+                                               or Symbol.symbol == QUALITY_STOCKS[5]
+                                               or Symbol.symbol == QUALITY_STOCKS[6]):
+            stock = Share(s.symbol)
+            pe_ratio = stock.get_price_earnings_ratio()
+            if pe_ratio is not None:
+                  quality_stocks.append((stock, float(pe_ratio)))
+
+      #Sort by highest price earnings ratio
+      sorted(quality_stocks, key=operator.itemgetter(1), reverse=True)
+
+      #Return top 3
+      return [quality_stocks[0][0], quality_stocks[1][0], quality_stocks[2][0]]
+
+
+#Return specific 3 ethical stock options
+def get_ethical_investing_symbols():
+      from db import Symbol
+      ethical_stocks = []
+
+      # Only get specific ethical stocks
+      for s in db.session.query(Symbol).filter(Symbol.symbol == ETHICAL_STOCKS[0]
+                                               or Symbol.symbol == ETHICAL_STOCKS[1]
+                                               or Symbol.symbol == ETHICAL_STOCKS[2]
+                                               or Symbol.symbol == ETHICAL_STOCKS[3]
+                                               or Symbol.symbol == ETHICAL_STOCKS[4]
+                                               or Symbol.symbol == ETHICAL_STOCKS[5]):
+            stock = Share(s.symbol)
+            pe_ratio = stock.get_price_earnings_ratio()
+            if pe_ratio is not None:
+                  ethical_stocks.append((stock, float(pe_ratio)))
+
+      # Sort by highest price earnings ratio
+      sorted(ethical_stocks, key=operator.itemgetter(1), reverse=True)
+
+      # Return top 3
+      return [ethical_stocks[0][0], ethical_stocks[1][0], ethical_stocks[2][0]]
 
 
 #TODO: How to divide better? I'm just dividing them equally
