@@ -11,8 +11,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app, session_options={'autocommit': True})
-QUALITY_STOCKS = ('GE','BA','HD','SBUX','PG','PEP','VZ')
-ETHICAL_STOCKS = ('DIS','PX','GOOG','UNFI','HLF','GILD')
 
 #Return the stock names with the lowest ratio of price–earnings ratio
 def get_value_investing_symbols():
@@ -57,20 +55,14 @@ def get_quality_investing_symbols():
       quality_stocks = []
 
       # Only get specific quality stocks
-      for s in db.session.query(Symbol).filter(Symbol.symbol == QUALITY_STOCKS[0]
-                                               or Symbol.symbol == QUALITY_STOCKS[1]
-                                               or Symbol.symbol == QUALITY_STOCKS[2]
-                                               or Symbol.symbol == QUALITY_STOCKS[3]
-                                               or Symbol.symbol == QUALITY_STOCKS[4]
-                                               or Symbol.symbol == QUALITY_STOCKS[5]
-                                               or Symbol.symbol == QUALITY_STOCKS[6]):
+      for s in db.session.query(Symbol).filter(Symbol.quality == True):
             stock = Share(s.symbol)
             pe_ratio = stock.get_price_earnings_ratio()
             if pe_ratio is not None:
-                  quality_stocks.append((stock, float(pe_ratio)))
+                  quality_stocks.append((s, float(pe_ratio)))
 
       #Sort by highest price earnings ratio
-      sorted(quality_stocks, key=operator.itemgetter(1), reverse=True)
+      quality_stocks.sort(key=operator.itemgetter(1), reverse=True)
 
       #Return top 3
       return [quality_stocks[0][0], quality_stocks[1][0], quality_stocks[2][0]]
@@ -82,16 +74,11 @@ def get_ethical_investing_symbols():
       ethical_stocks = []
 
       # Only get specific ethical stocks
-      for s in db.session.query(Symbol).filter(Symbol.symbol == ETHICAL_STOCKS[0]
-                                               or Symbol.symbol == ETHICAL_STOCKS[1]
-                                               or Symbol.symbol == ETHICAL_STOCKS[2]
-                                               or Symbol.symbol == ETHICAL_STOCKS[3]
-                                               or Symbol.symbol == ETHICAL_STOCKS[4]
-                                               or Symbol.symbol == ETHICAL_STOCKS[5]):
+      for s in db.session.query(Symbol).filter(Symbol.ethical == True):
             stock = Share(s.symbol)
             pe_ratio = stock.get_price_earnings_ratio()
             if pe_ratio is not None:
-                  ethical_stocks.append((stock, float(pe_ratio)))
+                  ethical_stocks.append((s, float(pe_ratio)))
 
       # Sort by highest price earnings ratio
       sorted(ethical_stocks, key=operator.itemgetter(1), reverse=True)
@@ -123,7 +110,7 @@ def stock_data():
       result["history_data"] = []
 
       #TODO: For now, this call is only returning value investing data.
-      suggested_stock_symbols = get_value_investing_symbols()
+      suggested_stock_symbols = get_quality_investing_symbols()
       for s in suggested_stock_symbols:
             result["history_data"].append([x.to_json() for x in s.get_historical_data()])
 

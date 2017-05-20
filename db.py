@@ -40,6 +40,8 @@ class Symbol(db.Model):
     symbol = db.Column(db.String, unique=True)
     symbol_type = db.Column(choice.ChoiceType(TYPES))
     index = db.Column(db.Boolean, default=False)
+    quality = db.Column(db.Boolean, default=False)
+    ethical = db.Column(db.Boolean, default=False)
 
     def get_historical_data(self):
         DAYS = 5
