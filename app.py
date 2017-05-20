@@ -98,7 +98,7 @@ def get_growth_investing_symbols():
             if pe_ratio is not None:
                   growth_stocks.append((s, float(pe_ratio)))
 
-      #sort the array by price–earnings ratio(lowest first)
+      #sort the array by price–earnings ratio(highest first)
       growth_stocks = sorted(growth_stocks, key = operator.itemgetter(1), reverse=True)
 
 
