@@ -86,6 +86,24 @@ def get_ethical_investing_symbols():
       # Return top 3
       return [ethical_stocks[0][0], ethical_stocks[1][0], ethical_stocks[2][0]]
 
+#Return the stock names with the highest price–earnings ratio
+def get_growth_investing_symbols():
+      from db import Symbol
+      growth_stocks = []
+
+      #Loop each stock and generate an array with (stock_name, price-earnings ratio) tuples
+      for s in Symbol.query.filter(Symbol.symbol_type == 'STOCK'):
+            stock = Share(s.symbol)
+            pe_ratio = stock.get_price_earnings_ratio()
+            if pe_ratio is not None:
+                  growth_stocks.append((s, float(pe_ratio)))
+
+      #sort the array by price–earnings ratio(lowest first)
+      growth_stocks = sorted(growth_stocks, key = operator.itemgetter(1), reverse=True)
+
+
+      #return the recommended symbols
+      return [growth_stocks[0][0], growth_stocks[1][0], growth_stocks[2][0]]
 
 #TODO: How to divide better? I'm just dividing them equally
 def divide_money(stocks, investment):
