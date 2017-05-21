@@ -1,4 +1,5 @@
 import datetime
+import yahoo_finance
 from sqlalchemy_utils.types import choice
 
 from app import db
@@ -38,6 +39,7 @@ class Symbol(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     symbol = db.Column(db.String, unique=True)
+    name = db.Column(db.String)
     symbol_type = db.Column(choice.ChoiceType(TYPES))
     index = db.Column(db.Boolean, default=False)
     quality = db.Column(db.Boolean, default=False)
@@ -45,7 +47,7 @@ class Symbol(db.Model):
 
     def get_historical_data(self):
         DAYS = 5
-        dates = last_n_dates(DAYS)
+        dates = last_n_weekdays(DAYS)
         values_in_db = self.values.filter(db.and_(
             SymbolValue.date >= dates[-1],
             SymbolValue.date <= dates[0],
@@ -71,6 +73,10 @@ class Symbol(db.Model):
                 self.values_monthly.append(SymbolValueMonthly(**data))
         return self.values_monthly.order_by(SymbolValueMonthly.date)
 
+    def get_name(self):
+        if not self.name:
+            self.name = yahoo_finance.yahoo_finance.Share(self.symbol).get_name()
+        return self.name
 
     def __repr__(self):
         return '<Symbol {}:{}>'.format(self.id, self.symbol)
@@ -128,6 +134,12 @@ class SymbolValueMonthly(db.Model):
         return ret
 
 
-def last_n_dates(n):
-    base = datetime.datetime.today().date()
-    return [base - datetime.timedelta(days=x) for x in range(0, n)]
+def last_n_weekdays(n, cur=None):
+    ret = []
+    if not cur:
+        cur = datetime.datetime.today().date()
+    while len(ret) != n:
+        if cur.isoweekday() <= 5:
+            ret.append(cur)
+        cur = cur - datetime.timedelta(days=1)
+    return ret
