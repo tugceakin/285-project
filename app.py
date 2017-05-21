@@ -105,7 +105,6 @@ def get_growth_investing_symbols():
       #return the recommended symbols
       return [growth_stocks[0][0], growth_stocks[1][0], growth_stocks[2][0]]
 
-#TODO: How to divide better? I'm just dividing them equally
 def divide_money(stocks, investment):
       divide_dict = {}
       inv_per_stock = investment/ len(stocks);
@@ -114,9 +113,7 @@ def divide_money(stocks, investment):
             stock = Share(symbol.symbol)
             divide_dict[symbol.symbol] = int(inv_per_stock / float(stock.get_price()))
 
-
       return divide_dict
-
 
 @app.route('/stock_data', methods=['POST'])
 def stock_data():
@@ -127,19 +124,20 @@ def stock_data():
       strategies = request.json["strategies"];
       result = {}
       result["history_data"] = []
+      result["stock_names"] = []
       suggested_stock_symbols = []
 
       if "Index Investing" in strategies:
             #Concatenate two lists
             suggested_stock_symbols = suggested_stock_symbols + get_index_investing_data() 
 
-      if "Value Investing" in strategies:  
+      if "Value Investing" in strategies:
             suggested_stock_symbols = suggested_stock_symbols + get_value_investing_symbols()
             
-      if "Quality Investing" in strategies:  
+      if "Quality Investing" in strategies:
             suggested_stock_symbols = suggested_stock_symbols + get_quality_investing_symbols()
             
-      if "Ethical Investing" in strategies:  
+      if "Ethical Investing" in strategies:
             suggested_stock_symbols = suggested_stock_symbols + get_ethical_investing_symbols()
 
       if "Growth Investing" in strategies:
@@ -148,9 +146,11 @@ def stock_data():
 
       for s in suggested_stock_symbols:
             result["history_data"].append([x.to_json() for x in s.get_historical_data()])
-
-      #Divide investment
+            result["stock_names"].append(s.get_name())
+      #Divide investment and get stock names
       result["divide_data"] = divide_money(suggested_stock_symbols, investment)
+     
+
       return jsonify(result)
 
 

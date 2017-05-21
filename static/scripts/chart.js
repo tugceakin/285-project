@@ -215,3 +215,13 @@ var initBarChart = function(data){
         }
 	});
 }
+
+var initStockNameDiv = function(names){
+	var nameListHTML = "";
+
+	for(var i=0; i<names.length; i++){
+		nameListHTML += "<li>" + names[i] + "</li>";
+	}
+
+	$("#suggested-stocks-div ul").append(nameListHTML);
+}

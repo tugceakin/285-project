@@ -16,7 +16,8 @@ def scrape_historical_data(symbol, monthly=False):
       history_page = urlopen(history_url)
       soup = BeautifulSoup(history_page, "html.parser")
       rows = soup.findAll("tr", {"class": "BdT"})
-
+      #stock_name = soup.find('div', id='quote-header-info').find("h1").get_text();
+      
       #First 5 rows = data of last 5 days
       for x in r:
             #Table data span order: date, open, high, low, close, adjClose, volume
@@ -31,6 +32,7 @@ def scrape_historical_data(symbol, monthly=False):
                   "close": float(spans[4].get_text()),
                   "adj_close": float(spans[5].get_text()),
                   "volume": spans[6].get_text(),
+
             }
 
             history_data.append(day_data)
