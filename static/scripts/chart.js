@@ -123,7 +123,7 @@ var initWeeklyChart = function(data){
 	        scales: {
 	            yAxes: [{
 	                ticks: {
-	                    beginAtZero:false
+	                    beginAtZero:true
 	                }
 	            }]
 	        }
