@@ -17,7 +17,6 @@ def scrape_historical_data(symbol, monthly=False):
       soup = BeautifulSoup(history_page, "html.parser")
       rows = soup.findAll("tr", {"class": "BdT"})
       #stock_name = soup.find('div', id='quote-header-info').find("h1").get_text();
-      
       #First 5 rows = data of last 5 days
       for x in r:
             #Table data span order: date, open, high, low, close, adjClose, volume
