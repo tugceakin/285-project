@@ -18,7 +18,12 @@ var isFormValid = function(){
 		$('.investment-error').show();
 		$('.investment-error').html('Please enter an investment amount.');
 		isValid = false;
+	}else if(investment < 5000){
+		$('.investment-error').show();
+		$('.investment-error').html('Invesment amount should be higher than 5000.');
+		isValid = false;
 	}
+
 
 	return isValid;
 }
